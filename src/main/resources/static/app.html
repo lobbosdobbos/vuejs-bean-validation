@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app">
+    <form @submit="checkForm" method="get">
+        <div>
+            <label for="message">Message</label>
+            <input v-model="model.message" id="message">
+        </div>
+        <div v-if="validation['message']">
+            {{ validation['message'] }}
+        </div>
+
+        <div>
+            <label for="address.street">Street</label>
+            <input v-model="model.address.street" id="address.street">
+        </div>
+        <div v-if="validation['address.street']">
+            {{ validation['address.street'] }}
+        </div>
+
+        <div>
+            <label for="address.city">City</label>
+            <input v-model="model.address.city" id="address.city">
+        </div>
+        <div v-if="validation['address.city']">
+            {{ validation['address.city'] }}
+        </div>
+
+        <div>
+            <button type="submit">submit</button>
+        </div>
+    </form>
+</div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data() { return {
+            model: {
+                message: '',
+                address: {
+                    street: '',
+                    city: ''
+                }
+            },
+            validation: {}
+        }},
+        methods: {
+            checkForm: function (e) {
+                e.preventDefault()
+                var tmpValidation = {};
+                fetch('http://localhost:8080/validate', {
+                    method: 'post',
+                    headers: new Headers({'Content-Type': 'application/json'}),
+                    body: JSON.stringify(this.model)
+                })
+                    .then(response => response.json())
+                .then(data => this.validation =  data);
+            }
+        }
+    });
+</script>
+</html>
