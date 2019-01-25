@@ -43,27 +43,28 @@
 <script>
     new Vue({
         el: '#app',
-        data() { return {
-            model: {
-                message: '',
-                address: {
-                    street: '',
-                    city: ''
-                }
-            },
-            validation: {}
-        }},
+        data() {
+            return {
+                model: {
+                    message: '',
+                    address: {
+                        street: '',
+                        city: ''
+                    }
+                },
+                validation: {}
+            }
+        },
         methods: {
             checkForm: function (e) {
-                e.preventDefault()
-                var tmpValidation = {};
                 fetch('http://localhost:8080/validate', {
                     method: 'post',
                     headers: new Headers({'Content-Type': 'application/json'}),
                     body: JSON.stringify(this.model)
-                })
-                    .then(response => response.json())
-                .then(data => this.validation =  data);
+                }).then(response => response.json())
+                    .then(data => this.validation = data);
+
+                e.preventDefault()
             }
         }
     });
